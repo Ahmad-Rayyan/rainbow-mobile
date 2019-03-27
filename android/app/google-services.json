@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "624151639492",
+    "firebase_url": "https://rainbow-react.firebaseio.com",
+    "project_id": "rainbow-react",
+    "storage_bucket": "rainbow-react.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624151639492:android:c39ab31908aaa27c",
+        "android_client_info": {
+          "package_name": "com.rainbow_react_native_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624151639492-2uoima48av5pb53vuhfli089s8qt4rep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8_omPeaX2HGsiqO-Vkx8aIGGvAKEBBH8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

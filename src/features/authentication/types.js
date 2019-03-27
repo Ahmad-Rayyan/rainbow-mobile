@@ -1,0 +1,9 @@
+/* authntication action types */
+export const EMAIL_CHANGED = 'email_changed';
+export const PASSWORD_CHANGED = 'password_changed';
+export const LOGIN_SUCCESS = 'login_success';
+export const LOG_OUT_SUCCESS = 'log_out_success';
+export const LOGIN_FAIL = 'login_fail';
+export const LOADER_ACTION = 'view_loader';
+export const LOGIN_WITH_TOKEN_SUCCESS = 'login_with_token_success';
+export const GET_CONNECTED_USER_DATA = 'get_connected_user_date';
