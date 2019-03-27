@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, Footer, Drawer, FooterTab, Button, Icon, Text, Badge, Item, Input } from 'native-base';
+import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text, Badge, Item, Input } from 'native-base';
 import { DeviceEventEmitter } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Contacts from './Contacts';
 import Conversations from './Conversations';
 import { getCallState } from '../features/webrtc/actions';
-import { getConnectedUser } from '../features/authentication/actions';
-import { WebrtcModule, Authentication } from '../main/RainbowNativeModules';
-import MenuSideBar from './MenuSideBar';
-import Strings from '../resources/localization/Strings'
+import { WebrtcModule } from '../main/RainbowNativeModules';
+import { TabsStyle } from '../resources/styles/Style';
+
 
 class Home extends Component {
 
@@ -18,13 +17,8 @@ class Home extends Component {
         this.onCallAdded = this.onCallAdded.bind(this);
         this.onCallModifed = this.onCallModifed.bind(this);
         this.renderScreen = this.renderScreen.bind(this);
-        this.openDrawer = this.openDrawer.bind(this);
-        this.closeDrawer = this.closeDrawer.bind(this);
-        this.getConnectedUserData = this.getConnectedUserData.bind(this);
-        this.setTotal = this.setTotal.bind(this);
         this.state = {
-            screen: 'conversations',
-            totalUnread: 0
+            screen: 'conversations'
         };
         this.onCallAddedSubscribtion = null;
         this.onCallDeclinedSubscribtion = null;
@@ -35,124 +29,145 @@ class Home extends Component {
         this.onCallAddedSubscribtion = DeviceEventEmitter.addListener('on_call_added', this.onCallAdded);
         this.onCallDeclinedSubscribtion = DeviceEventEmitter.addListener('call_Declined', this.onCallDeclined);
         this.onCallModifiedSubscribtion = DeviceEventEmitter.addListener('call_Modified', this.onCallModifed);
-        DeviceEventEmitter.addListener('connected_user_data', this.getConnectedUserData);
     }
     componentWillUnmount() {
+        console.log('Home: componentWillUnmount called');
         this.onCallAddedSubscribtion.remove();
         this.onCallModifiedSubscribtion.remove();
         this.onCallDeclinedSubscribtion.remove();
     }
     onCallAdded(event) {
-        this.props.getCallState(event);
+        this.props.getCallState(event.callState);
+        console.log('Home: onCallAdded');
         Actions.webrtc({
             contactProfilePic: event.contactPic,
         });
     }
     onCallDeclined(call) {
         console.log('Home: onCallDeclined event', call);
-        Actions.pop();
+        Actions.main();
     }
     onCallModifed(call) {
         console.log('Home: onCallModifed event', call.callState);
-        this.props.getCallState(call);
+        this.props.getCallState(call.callState);
     }
-    getConnectedUserData(connectedUser) {
-        this.props.getConnectedUser(connectedUser);
-    }
-    openDrawer() {
-        Authentication.getConnectedUser();
-        this._drawer._root.open();
-    }
-    setTotal(total) {
-        this.setState({
-            totalUnread: total
-        });
-    }
-    closeDrawer() {
-        this._drawer._root.close();
-    }
+
     switchScreen(screen) {
         console.log('switchScreen called', screen);
+
         this.setState({ screen });
     }
 
     renderScreen() {
         if (this.state.screen === 'conversations') {
             console.log('renderScreen called conversations');
-            return (<Conversations setTotal={this.setTotal} />);
+            return (
+                <React.Fragment>
+                    <Content>
+                        <Conversations />
+                    </Content>
+                    <Footer>
+                        <FooterTab style={TabsStyle.backgroundColor}>
+                            <Button style={TabsStyle.backgroundColor} active badge vertical onPress={() => this.switchScreen('conversations')} >
+                                <Badge><Text>2</Text></Badge>
+                                <Icon name="ios-chatboxes" color={TabsStyle.iconColor.color} />
+                                <Text color={TabsStyle.iconColor.color} >conversations</Text>
+                            </Button>
+                            <Button vertical onPress={() => this.switchScreen('contacts')} >
+                                <Icon color={TabsStyle.iconColor.color} name="person" />
+                                <Text color={TabsStyle.iconColor.color} >contacts</Text>
+                            </Button>
+                            <Button badge vertical onPress={() => this.switchScreen(0)} >
+                                <Badge ><Text>51</Text></Badge>
+                                <Icon color={TabsStyle.iconColor.color} name="ios-chatbubbles" />
+                                <Text color={TabsStyle.iconColor.color} >bubbles</Text>
+                            </Button>
+                        </FooterTab>
+                    </Footer>
+                </React.Fragment>
+            );
         } else if (this.state.screen === 'contacts') {
-            return (<Contacts />);
+            return (
+                <React.Fragment>
+                    <Content>
+                        <Contacts />
+                    </Content>
+                    <Footer>
+                        <FooterTab style={TabsStyle.backgroundColor}>
+                            <Button badge vertical onPress={() => this.switchScreen('conversations')} >
+                                <Badge><Text>2</Text></Badge>
+                                <Icon color={TabsStyle.iconColor.color} name="ios-chatboxes" />
+                                <Text color={TabsStyle.iconColor.color} >conversations</Text>
+                            </Button>
+                            <Button style={TabsStyle.backgroundColor} active vertical onPress={() => this.switchScreen('contacts')} >
+                                <Icon color={TabsStyle.iconColor.color} name="person" />
+                                <Text color={TabsStyle.iconColor.color} >contacts</Text>
+                            </Button>
+                            <Button badge vertical onPress={() => this.switchScreen(0)} >
+                                <Badge ><Text>51</Text></Badge>
+                                <Icon color={TabsStyle.iconColor.color} name="ios-chatbubbles" />
+                                <Text color={TabsStyle.iconColor.color} >bubbles</Text>
+                            </Button>
+                        </FooterTab>
+                    </Footer>
+                </React.Fragment>
+            );
         } else {
-            return (<Text>No Bubbles Found </Text>);
+            return (
+                <React.Fragment>
+                    <Content style={{ top: 150, alignSelf: 'center' }}>
+                    <Text>No Bubbles Found </Text>
+                    </Content>
+                    <Footer>
+                        <FooterTab style={TabsStyle.backgroundColor}>
+                            <Button badge vertical onPress={() => this.switchScreen('conversations')} >
+                                <Badge><Text>2</Text></Badge>
+                                <Icon color={TabsStyle.iconColor.color} name="ios-chatboxes" />
+                                <Text color={TabsStyle.iconColor.color}>conversations</Text>
+                            </Button>
+                            <Button vertical onPress={() => this.switchScreen('contacts')} >
+                                <Icon color={TabsStyle.iconColor.color} name="person" />
+                                <Text color={TabsStyle.iconColor.color}>contacts</Text>
+                            </Button>
+                            <Button style={TabsStyle.backgroundColor} active badge vertical onPress={() => this.switchScreen('bubbles')} >
+                                <Badge ><Text>51</Text></Badge>
+                                <Icon color={TabsStyle.iconColor.color} name="ios-chatbubbles" />
+                                <Text color={TabsStyle.iconColor.color}>bubbles</Text>
+                            </Button>
+                        </FooterTab>
+                    </Footer>
+                </React.Fragment>
+            );
         }
     }
-
-    isActive(screen) {
-        return (this.state.screen === screen);
-    }
-
-    renderTotalUnread(totalUnread) {
-        if (this.state.totalUnread > 0) return <Badge><Text>{totalUnread}</Text></Badge>;
-    }
-
     render() {
-        let { totalUnread } = this.state;
         return (
-            <Drawer
-                ref={(ref) => { this._drawer = ref; }}
-                content={<MenuSideBar navigator={this._navigator} />}
-                onClose={() => this.closeDrawer()}
-            >
-                <Container>
-                    <Header searchBar rounded style={{ backgroundColor: '#0086CF' }}>
-                        <Item>
-                            <Icon name="menu" size={25} onPress={() => this.openDrawer()} />
-                            <Input placeholder={Strings.search} disabled />
-                            <Icon name="ios-search" size={25} />
-                        </Item>
-                        <Button transparent>
-                            <Text>{Strings.search}</Text>
-                        </Button>
-                    </Header>
-                    <React.Fragment>
-                        <Content>
-                            {this.renderScreen()}
-                        </Content>
-                        <Footer>
-                            <FooterTab style={{ backgroundColor: '#ffffff' }}>
-                                <Button style={{ backgroundColor: '#ffffff' }} active={this.isActive('conversations')} badge={totalUnread > 0} vertical onPress={() => this.switchScreen('conversations')} >
-                                    {this.renderTotalUnread(totalUnread)}
-                                    <Icon style={{ color: '#0086CF' }} name="ios-chatboxes" />
-                                    <Text style={{ color: '#0086CF' }}>{Strings.conversations}</Text>
-                                </Button>
-                                <Button style={{ backgroundColor: '#ffffff' }} active={this.isActive('contacts')} vertical onPress={() => this.switchScreen('contacts')} >
-                                    <Icon style={{ color: '#0086CF' }} color='#0086CF' name="person" />
-                                    <Text style={{ color: '#0086CF' }} style={{ color: '#0086CF' }} >{Strings.contacts}</Text>
-                                </Button>
-                                <Button style={{ backgroundColor: '#ffffff' }} active={this.isActive('bubbles')} vertical onPress={() => this.switchScreen('bubbles')} >
-                                    <Icon style={{ color: '#0086CF' }} name="ios-chatbubbles" color='#0086CF' />
-                                    <Text style={{ color: '#0086CF' }} >{Strings.bubbles}</Text>
-                                </Button>
-                            </FooterTab>
-                        </Footer>
-                    </React.Fragment>
-                </Container>
-            </Drawer>
+            <Container>
+                <Header searchBar rounded style={TabsStyle.backgroundColor}>
+                    <Item>
+                        <Icon name="ios-search" size={25} />
+                        <Input placeholder="Search" disabled />
+                        <Icon name="ios-people" size={25} />
+                    </Item>
+                    <Button transparent>
+                        <Text>Search</Text>
+                    </Button>
+                </Header>
+                {this.renderScreen()}
+            </Container>
         );
     }
 }
 
 const mapStateToProps = state => {
     return {
-        callState: state.webrtcReducer.callState,
-        user: state.authenticationReducer.user
+        callState: state.webrtcReducer.callState
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        getCallState: (callState) => dispatch(getCallState(callState)),
-        getConnectedUser: (connectedUser) => dispatch(getConnectedUser(connectedUser))
+        getCallState: (callState) => dispatch(getCallState(callState))
     };
 };
 
