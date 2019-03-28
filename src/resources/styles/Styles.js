@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-            const TabsColor = '#1e1e90';
-            const iconColor = '#561818';
+            const TabsColor = '#0e0e43';
+            const iconColor = '#b31212';
             const TabsStyle = StyleSheet.create({
                 backgroundColor: {
                     backgroundColor: TabsColor
