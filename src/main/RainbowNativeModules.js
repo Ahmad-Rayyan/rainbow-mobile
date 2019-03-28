@@ -5,4 +5,3 @@ module.exports = {
     WebrtcModule: NativeModules.Webrtc,
     ConversationsModule: NativeModules.Conversations
 };
-

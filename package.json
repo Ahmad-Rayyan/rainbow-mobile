@@ -7,6 +7,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "appcenter": "1.13.0",
+    "appcenter-analytics": "1.13.0",
+    "appcenter-crashes": "1.13.0",
     "babel-eslint": "^10.0.1",
     "expo-font": "^2.0.0",
     "log": "^3.2.0",
