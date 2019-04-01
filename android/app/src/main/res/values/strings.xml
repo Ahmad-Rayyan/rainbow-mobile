@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Rainbow_react_native_app</string>
-    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ENABLE_IN_JS</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
 </resources>

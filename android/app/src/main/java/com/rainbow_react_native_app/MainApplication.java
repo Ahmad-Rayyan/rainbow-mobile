@@ -54,15 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeDocumentPicker(),
             new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
             new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
-            new AppCenterReactNativePackage(MainApplication.this),
-                    new ReactNativeLocalizationPackage(),
-                    new KeychainPackage(),
-                    new ReactVideoPackage(),
-                    new VectorIconsPackage(),
-                    new RNGestureHandlerPackage(),
-                    new RNSoundPackage(),
-                    new RainbowPackage(),
-                    new ReactNativeDocumentPicker()
+            new AppCenterReactNativePackage(MainApplication.this)
             );
         }
         @Override
